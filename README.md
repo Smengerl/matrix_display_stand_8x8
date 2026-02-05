@@ -4,17 +4,31 @@
 [![3D Printing](https://img.shields.io/badge/3D_printing-STL-green)](#)
 [![License](https://img.shields.io/badge/license-Beerware-green)](#)
 
-A universal 8x8 LED matrix display stand with ESP32 for versatile applications.
+## Summary
+This project provides a clean, professional-looking stand for standard 8x8 WS2812B LED matrices. The modular design features a stable base, integrated ESP32 housing, and a diffuser system for optimal light distribution. Perfect for Home Assistant displays, pixel art, notifications, or custom visualizations.
 
-## Overview
 
-This project provides a desktop stand for an 8x8 WS2812B LED matrix with the following features:
+## Features
 
-- **Desktop stand** - Stable base for table placement
-- **Clean aesthetics** - Acrylic cover and diffuser for a clean look with retro pixel optics
-- **Low cost** - Budget-friendly build
-- **Versatile applications** - ESP32-based design enables various use cases
-- **Easy to build** - Simple to print and assemble
+- **🖥️ Desktop Stand** - Stable base designed for table placement with professional appearance
+- **✨ Clean Aesthetics** - Semi-transparent acrylic cover combined with diffuser system creates a sleek look with retro pixel optics
+- **💰 Budget-Friendly** - Complete build for under $10 in components
+- **🔌 Smart Integration** - ESP32-based design with WiFi connectivity for Home Assistant and IoT applications
+- **🎨 Versatile Display** - Perfect for status displays, notifications, pixel art, weather info, or custom animations
+- **🛠️ Easy Assembly** - All parts print without supports; simple assembly with common hardware
+- **🔧 Modular Design** - Separate diffuser and grid system for optimal light distribution and customization
+- **📐 Standard Compatible** - Works with standard 8x8 WS2812B LED matrices
+
+## Example Applications
+
+* Home Assistant status display
+* Solar/battery monitoring
+* Weather display
+* Notifications
+* Pixel art animations
+* Retro game displays
+* Music visualizer
+
 
 
 ![Example assembly](./print/zsb/full.png)
@@ -23,13 +37,7 @@ This project provides a desktop stand for an 8x8 WS2812B LED matrix with the fol
 | --------- | --------- | 
 | <img src="./print/example_1.jpg" width="300" alt="Example 1"> | <img src="./print/example_2.jpg" width="300" alt="Example 2"> | 
 
-## Features
 
-- Compatible with standard WS2812B 8x8 LED matrices
-- ESP32-based for WiFi connectivity and smart home integration
-- Modular design with separate diffuser and grid for optimal light distribution
-- All parts designed to print without supports
-- Optional semi-transparent acrylic front panel for enhanced appearance
 
 ## 3D Printed Parts 
 

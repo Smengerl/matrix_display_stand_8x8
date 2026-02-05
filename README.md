@@ -82,6 +82,44 @@ See the assembly animation below for visual guidance:
 
 <img src="./print/assembly.gif" alt="Assembly animation">
 
+
+
+
+## Usage Example: Solar and EVCC Control Display
+
+Example implementation for Home Assistant via ESPHome using animated GIFs to showcase the display's capabilities.
+
+This example consolidates solar system and electric vehicle charging (EVCC) status into a single icon. It demonstrates how to implement such use cases in ESPHome and can be easily adapted for other applications. 
+
+
+### Features
+
+* Home battery charge level
+* Solar charging battery active (excess solar power stored in battery)
+* Solar feeding to grid active (hence consider solar excess charging via EVCC)
+* Battery depleted and home is now powered by grid
+* Vehicle connected to EVCC charger and charging status
+
+
+### Prerequisites
+
+- home assistant
+- ESP home
+
+
+### Installation
+
+1. Register the ESP32 with ESPHome (e.g., via ESPHome Web).
+2. Rename the device to matrix-display (so that `color-matrix-display.yaml` is the .yaml of your ESP home configuration for the device)
+3. Copy the contents of [./ha_scripts](././ha_scripts) to the folder `[homeassistant]/config/esphome`, replacing `color-matrix-display.yaml` and include the images subfolder.
+4. Customize the entity names in the yaml according to your configuration
+5. Open `color-matrix-display.yaml` in ESPHome and upload the configuration to the device.
+6. Once installed, the device will appear in Home Assistant. Set up the device giving it a name 
+7. The device will show up in Home Assistant under the ESPHome integration. There you can change the default brigtness or see debug information
+
+
+
+
 ## Development
 
 Contributions are welcome! Please see `CONTRIBUTING.md` for details and follow the `CODE_OF_CONDUCT.md` when contributing.

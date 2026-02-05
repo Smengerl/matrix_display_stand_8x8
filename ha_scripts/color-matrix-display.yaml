@@ -1,0 +1,331 @@
+###########################################
+# 8x8 LED color matrix display
+# see: github.com/smengerl/color-matrix-display
+###########################################
+# EVCC and solar panel status
+###########################################
+substitutions:
+  name: "color-matrix-display"
+  friendly_name: Color_Matrix_Display
+  comment: Multi purpose color matrix LED display WS2812
+  project_name: color_matrix_display.esphome
+
+  TAG: "color-matrix-display.yaml"
+
+  api_key: "7nYxgKZqYw2vT3g9rLhXJvZkQm8sN5cUoWbRzXyTqvE="
+  ota_pw: "3f6786b29f445e0ac078c0bfe2e0c81d"
+  fallback_hotspot_ssid: "Color Matrix Fallback Hotspot"
+  fallback_hotspot_pw: "238asdqvasd3t4d"
+
+  ###########################################
+  # Hardware configuration
+  ###########################################
+  led_pin: GPIO32 # pin for WS2812 display
+
+  ###########################################
+  # Display behavior
+  ###########################################
+
+  # Number of frames before animation is repeated
+  MAX_WAITING_FRAMES: "50"
+
+  ###########################################
+  # Sensors - Adapt to your entity IDs in Home Assistant
+  # These are used to determine which animation to show on the display based
+  # on the current power flow and car charging state
+  ###########################################
+
+  ### Solar
+
+  # Batterie SOC
+  sensor_battery_soc_entity_id: sensor.battery_state_of_capacity
+
+  # Charging/discharging power of the battery
+  sensor_battery_charging_power_entity_id: sensor.battery_charge_discharge_power
+
+  # Power saldo (grid import/export)
+  sensor_power_saldo_entity_id: sensor.power_meter_active_power
+
+  ### EVCC
+
+  # charging enabled
+  sensor_evcc_charging_active_entity_id: binary_sensor.evcc_garage_enabled
+
+  # Vehicle connected to charger
+  sensor_evcc_vehicle_connected_to_charger_entity_id: binary_sensor.evcc_garage_connected
+
+  # Vehicle currently charging
+  sensor_evcc_vehicle_currently_charging_entity_id: binary_sensor.evcc_garage_charging # ob gerade in diesem Moment geladen wird
+
+  # sensor.wvwzzzed4se003938_charging_power
+  sensor_id7_charging_active_entity_id: switch.wvwzzzed4se003938_charging
+
+packages:
+  debug_basics: !include shared_packages/debug_basics.yaml
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  comment: ${comment}
+  name_add_mac_suffix: false
+  project:
+    name: ${project_name}
+    version: "1.0"
+  compile_process_limit: 1
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+#  level: VERBOSE
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: ${api_key}
+
+ota:
+  platform: esphome
+  password: ${ota_pw}
+
+wifi:
+  id: wifi_id
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${fallback_hotspot_ssid}
+    password: ${fallback_hotspot_pw}
+
+# In combination with the `ap` this allows the user to provision wifi credentials to the device via WiFi AP.
+captive_portal:
+
+# Displays a notification in case the device need to be updated
+dashboard_import:
+  package_import_url: github://esphome/example-configs/esphome-web/esp32.yaml@main
+  import_full_config: true
+
+###########################################
+# Sensors
+# These sensors import values from Home Assistant for use in display logic
+###########################################
+sensor:
+  - platform: homeassistant
+    id: sensor_battery_soc
+    entity_id: $sensor_battery_soc_entity_id
+
+  - platform: homeassistant
+    id: sensor_battery_charging_power
+    entity_id: $sensor_battery_charging_power_entity_id
+
+  - platform: homeassistant
+    id: sensor_power_saldo
+    entity_id: $sensor_power_saldo_entity_id
+    filters:
+      - sliding_window_moving_average:
+          window_size: 4 # Sensor updates every 30s - use a 4 value sliding window average to prevent flickering
+          send_every: 1
+          send_first_at: 1
+
+###########################################
+# Binary sensors for car charging state
+###########################################
+binary_sensor:
+  - platform: homeassistant
+    id: sensor_evcc_charging_enabled
+    entity_id: $sensor_evcc_charging_active_entity_id
+
+  - platform: homeassistant
+    id: sensor_evcc_vehicle_connected_to_charger
+    entity_id: $sensor_evcc_vehicle_connected_to_charger_entity_id
+
+  - platform: homeassistant
+    id: sensor_id7_charging_active
+    entity_id: $sensor_id7_charging_active_entity_id
+
+###########################################
+# LED matrix light definition
+###########################################
+light:
+  - platform: esp32_rmt_led_strip
+    rgb_order: GRB
+    pin: ${led_pin}
+    num_leds: 64
+    chipset: ws2812
+    id: led_matrix_light
+    name: "Display Brightness"
+    restore_mode: RESTORE_DEFAULT_ON
+    default_transition_length: 0s
+    effects:
+      - addressable_lambda:
+          name: "Display"
+          update_interval: 50ms
+          lambda: |-
+            // Effect is handled by the display component
+
+###########################################
+# Images for overlays and backgrounds
+###########################################
+image:
+  - file: "images/matrix_lowres/car_overlay.png"
+    id: image_car_overlay
+    type: RGB
+    transparency: alpha_channel
+  - file: "images/matrix_lowres/car_overlay_nocharge.png"
+    id: image_car_overlay_nocharge
+    type: RGB
+    transparency: alpha_channel
+  - file: "images/matrix_lowres/grid.png"
+    id: image_grid
+    type: RGB
+    transparency: alpha_channel
+
+###########################################
+# Animations for different power/connection states
+###########################################
+animation:
+  - file: "images/matrix_lowres/offline.gif"
+    id: animation_offline
+    type: RGB
+    transparency: alpha_channel
+  - file: "images/matrix_lowres/charging.gif"
+    id: animation_charging
+    type: RGB
+    transparency: alpha_channel
+  - file: "images/matrix_lowres/export.gif"
+    id: animation_export
+    type: RGB
+    transparency: alpha_channel
+  - file: "images/matrix_lowres/import.gif"
+    id: animation_import
+    type: RGB
+    transparency: alpha_channel
+
+###########################################
+# Periodically advance the offline animation
+###########################################
+interval:
+  - interval: 500ms
+    then:
+      animation.next_frame: animation_offline
+
+###########################################
+# Display configuration for the 8x8 LED matrix
+###########################################
+display:
+  - platform: addressable_light
+    id: led_matrix_display
+    addressable_light_id: led_matrix_light
+    width: 8
+    height: 8
+    rotation: 180°
+    update_interval: 50ms
+    #pixel_mapper: |-
+    #  if (x % 2 == 0) {
+    #    return (x * 8) + y;
+    #  }
+    #  return (x * 8) + (7 - y);
+    lambda: |-
+      // This lambda controls the display output for the matrix
+      static int waiting_frames = 0; // static variable to control animation frame timing
+
+      // Check if device is connected (e.g., to Home Assistant)
+      if (id(connection_state).state) {
+        auto battery_soc = id(sensor_battery_soc).state;
+        // If battery SOC is very low, show grid image (pure grid power)
+        if (battery_soc <= 5) {
+          it.image(0, 0, id(image_grid), ImageAlign::TOP_LEFT);
+        } else {
+          // Otherwise, determine which animation to show based on power flow
+          auto battery_charging_power = id(sensor_battery_charging_power).state;
+          auto power_saldo = id(sensor_power_saldo).state;
+          
+          esphome::animation::Animation* anim = NULL;
+
+          // Select animation based on power direction
+          if (power_saldo > 100) {
+            // Exporting to grid
+            anim = id(animation_export);
+          } else if (power_saldo < -100) {
+            // Importing from grid
+            anim = id(animation_import);
+          } else if (battery_charging_power > 0) {
+            // Charging battery
+            anim = id(animation_charging);
+          } else {
+            // None of the above: using battery
+          }
+
+          // Handle animation frame timing and display
+          if (anim != NULL) {
+            // If at last frame, reset animation
+            if (anim->get_current_frame() == anim->get_animation_frame_count() - 1) {
+              waiting_frames = 0;
+              anim->set_frame(0);
+              //ESP_LOGD("${TAG}", "Reset animation loop");
+            }
+            // Wait for MAX_WAITING_FRAMES before advancing to next frame
+            if (waiting_frames < ${MAX_WAITING_FRAMES}) {
+              //ESP_LOGD("${TAG}", "Wait frame: %d", waiting_frames);
+              waiting_frames++;
+            } else {
+              //ESP_LOGD("${TAG}", "Next frame");
+              anim->next_frame();
+            }
+            // Draw the animation on the display
+            //it.start_clipping (4, 0, 7, 7);
+            it.image(0, 0, anim, ImageAlign::TOP_LEFT);
+            //it.end_clipping ();
+          }
+
+          // Draw battery icon on the left side
+          it.start_clipping (0, 0, 4, 8);
+          Color color_white  = Color(0xDDDDDD);
+          Color color_red    = Color(0xFF0000);
+          Color color_yellow = Color(0xFFFF00);
+          Color color_blue   = Color(0x0000FF);
+
+          // Battery outline
+          it.line(1, 0, 2, 0, color_white); // top
+          it.line(0, 1, 0, 6, color_white); // left
+          it.line(3, 1, 3, 6, color_white); // right
+          it.line(0, 7, 3, 7, color_white); // bottom
+          // Fill battery based on SOC
+          if (battery_soc <= 10) {
+            // empty battery
+          } else if (battery_soc <= 25) {
+            it.rectangle(1, 6, 2, 1, color_red); // low
+          } else if (battery_soc <= 40) {
+            it.rectangle(1, 5, 2, 2, color_yellow); // medium-low
+          } else if (battery_soc <= 55) {
+            it.rectangle(1, 4, 2, 3, color_white); // medium
+          } else if (battery_soc <= 70) {
+            it.rectangle(1, 3, 2, 4, color_white); // medium-high
+          } else if (battery_soc <= 85) {
+            it.rectangle(1, 2, 2, 5, color_white); // high
+          } else if (battery_soc <= 100) {
+            it.rectangle(1, 1, 2, 6, color_white); // full
+          } else {
+            ESP_LOGW("${TAG}", "Invalid battery SOC: %d", battery_soc);
+            // Error
+          }
+          it.end_clipping ();
+        }
+
+        // Add car overlay if vehicle is plugged in
+        if (id(sensor_evcc_vehicle_connected_to_charger).state) { // Vehicle connected?
+          if (id(sensor_evcc_charging_enabled).state) { // Charging enabled?
+            it.image(0, 0, id(image_car_overlay), ImageAlign::TOP_LEFT);
+          } else {
+            it.image(0, 0, id(image_car_overlay_nocharge), ImageAlign::TOP_LEFT);
+          }
+        }
+
+      } else {
+        // If not connected, show offline animation
+        it.image(0, 0, id(animation_offline), ImageAlign::TOP_LEFT);
+      }

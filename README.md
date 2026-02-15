@@ -29,13 +29,14 @@ This project provides a clean, professional-looking stand for standard 8x8 WS281
 * Retro game displays
 * Music visualizer
 
-
-
-![Example assembly](./print/zsb/full.png)
-
-| Example 1 | Example 2 | 
+| Example | Rendering |
 | --------- | --------- | 
-| <img src="./print/example_1.jpg" width="300" alt="Example 1"> | <img src="./print/example_2.jpg" width="300" alt="Example 2"> | 
+| <img src="./print/example_usage.jpg" width="300" alt="Example usage"> | <img src="./print/zsb/full.png" width="300" alt="Rendering"> | 
+
+
+| Perspective 1 | Perspective 2 | Perspective 3 |
+| -------- | -------- | -------- |
+| <img src="./print/example_1.jpg" width="300" alt="Example 1"> | <img src="./print/example_2.jpg" width="300" alt="Example 2"> | <img src="./print/example_3.jpg" width="300" alt="Example 3"> |
 
 
 
@@ -97,8 +98,7 @@ See the assembly animation below for visual guidance:
 
 Example implementation for Home Assistant via ESPHome using animated GIFs to showcase the display's capabilities.
 
-This example consolidates solar system and electric vehicle charging (EVCC) status into a single icon. It demonstrates how to implement such use cases in ESPHome and can be easily adapted for other applications. 
-
+This example consolidates solar system and electric vehicle charging (EVCC) status into a single icon. It demonstrates how to implement such use cases in ESPHome and can be easily adapted for other applications.
 
 ### Features
 
@@ -108,6 +108,171 @@ This example consolidates solar system and electric vehicle charging (EVCC) stat
 * Battery depleted and home is now powered by grid
 * Vehicle connected to EVCC charger and charging status
 
+
+### Example Scenarios
+
+The display combines the battery indicator (left side) with power flow animations (right side) and optional EV overlays:
+
+<table>
+<tr>
+<th>Scenario</th>
+<th>Components</th>
+<th>Real Display Photo</th>
+</tr>
+
+<tr>
+<td><strong>Grid import and EV charging</strong></td>
+<td>
+• Battery: 10%<br>
+• Animation: Grid import (red)<br>
+• Overlay: Car charging enabled
+</td>
+<td>
+<img src="./print/example_scenario_1.gif" width="300" alt="Grid import with EV charging">
+</td>
+</tr>
+
+<tr>
+<td><strong>Solar charging home battery low</strong></td>
+<td>
+• Battery: 15%<br>
+• Animation: Battery Charging (blue)<br>
+</td>
+<td>
+<img src="./print/example_scenario_2.gif" width="300" alt="Solar charging home battery low">
+</td>
+</tr>
+
+<tr>
+<td><strong>Solar charging home battery full</strong></td>
+<td>
+• Battery: 95%<br>
+• Animation: Battery Charging (blue)<br>
+</td>
+<td>
+<img src="./print/example_scenario_3.gif" width="300" alt="Solar charging home battery full">
+</td>
+</tr>
+
+<tr>
+<td><strong>Solar power exporting to grid</strong></td>
+<td>
+• Battery: 100%<br>
+• Animation: Grid export (blue)<br>
+</td>
+<td>
+<img src="./print/example_scenario_4.gif" width="300" alt="Solar power exporting to grid">
+</td>
+</tr>
+
+</table>
+
+
+
+### Battery Status Indicator
+
+The left 4 pixels of the display show the battery state of charge (SOC) with a vertical battery icon:
+
+| SOC Range | Color | Fill Level |
+|-----------|-------|------------|
+| 0-10% | Empty | Empty battery outline |
+| 11-25% | 🔴 Red | 1 pixel (bottom) |
+| 26-40% | 🟡 Yellow | 2 pixels |
+| 41-55% | ⚪ White | 3 pixels |
+| 56-70% | ⚪ White | 4 pixels |
+| 71-85% | ⚪ White | 5 pixels |
+| 86-100% | ⚪ White | 6 pixels (full) |
+
+
+### Animation overlays
+
+The right 4 pixels of the display show different animations based on the current power flow and EVCC status. The animations are designed to be visually distinct and informative, allowing you to quickly understand the current state of your solar system and EV charging at a glance.
+
+<table>
+<tr>
+<th>Mode</th>
+<th>Display Animation</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td><strong>Solar Export</strong></td>
+<td>
+<img src="./ha_scripts/images/matrix_lowres/export.gif" alt="Export animation" style="image-rendering: pixelated; width: 100px;">
+</td>
+<td>
+Exporting solar power to the grid<br>
+<em>Triggered when: Power saldo > 100W</em>
+</td>
+</tr>
+
+<tr>
+<td><strong>Grid Import</strong></td>
+<td>
+<img src="./ha_scripts/images/matrix_lowres/import.gif" alt="Import animation" style="image-rendering: pixelated; width: 100px;">
+</td>
+<td>
+Importing power from the grid<br>
+<em>Triggered when: Power saldo < -100W</em>
+</td>
+</tr>
+
+<tr>
+<td><strong>Battery Charging</strong></td>
+<td>
+<img src="./ha_scripts/images/matrix_lowres/charging.gif" alt="Charging animation" style="image-rendering: pixelated; width: 100px;">
+</td>
+<td>
+Charging the home battery<br>
+<em>Triggered when: Battery charging power > 0W</em>
+</td>
+</tr>
+
+<tr>
+<td><strong>Pure Grid Power</strong></td>
+<td>
+<img src="./ha_scripts/images/matrix_lowres/grid.png" alt="Grid image" style="image-rendering: pixelated; width: 100px;">
+</td>
+<td>
+Running on pure grid power (battery depleted)<br>
+<em>Triggered when: Battery SOC ≤ 5%</em>
+</td>
+</tr>
+
+<tr>
+<td><strong>Offline</strong></td>
+<td>
+<img src="./ha_scripts/images/matrix_lowres/offline.gif" alt="Offline animation" style="image-rendering: pixelated; width: 100px;">
+</td>
+<td>
+Device disconnected from Home Assistant<br>
+<em>Shown when connection is lost</em>
+</td>
+</tr>
+
+<tr>
+<td><strong>EV Charging (Overlay)</strong></td>
+<td>
+<img src="./ha_scripts/images/matrix_lowres/car_overlay.png" alt="Car overlay" style="image-rendering: pixelated; width: 100px;">
+</td>
+<td>
+Electric vehicle connected and charging enabled<br>
+<em>Overlaid when vehicle is connected & charging enabled</em>
+</td>
+</tr>
+
+<tr>
+<td><strong>EV Connected (Overlay)</strong></td>
+<td>
+<img src="./ha_scripts/images/matrix_lowres/car_overlay_nocharge.png" alt="Car overlay no charge" style="image-rendering: pixelated; width: 100px;">
+</td>
+<td>
+Electric vehicle connected but charging disabled<br>
+<em>Overlaid when vehicle is connected but not charging</em>
+</td>
+</tr>
+
+</table>
 
 ### Prerequisites
 

@@ -2,7 +2,7 @@
 # 8x8 Matrix Display Stand
 
 [![3D Printing](https://img.shields.io/badge/3D_printing-STL-green)](#)
-[![License](https://img.shields.io/badge/license-Beerware-green)](#)
+[![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-blue)](http://creativecommons.org/licenses/by-sa/4.0/)
 
 ## Summary
 This project provides a clean, professional-looking stand for standard 8x8 WS2812B LED matrices. The modular design features a stable base, integrated ESP32 housing, and a diffuser system for optimal light distribution. Perfect for Home Assistant displays, pixel art, notifications, or custom visualizations.
@@ -301,7 +301,7 @@ All .stl, .png, and assembly pictures are automatically exported via my Fusion a
 
 ## License
 
-This project is licensed under the Beerware License — see `LICENSE.txt` for details.
+This project is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0) — see `LICENSE.txt` for details or visit http://creativecommons.org/licenses/by-sa/4.0/
 
 ## Author
 

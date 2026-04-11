@@ -1,0 +1,1 @@
+3D printable desktop stand for 8x8 WS2812B LED matrix displays with ESP32 integration

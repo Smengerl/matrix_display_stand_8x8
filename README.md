@@ -4,6 +4,19 @@
 [![3D Printing](https://img.shields.io/badge/3D_printing-STL-green)](#)
 [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-blue)](http://creativecommons.org/licenses/by-sa/4.0/)
 
+## Table of Contents
+- [Summary](#summary)
+- [Features](#features)
+- [Example Applications](#example-applications)
+- [3D Printed Parts](#3d-printed-parts)
+- [Bill of Materials](#bill-of-materials)
+- [Hardware Requirements](#hardware-requirements)
+- [Assembly Instructions](#assembly-instructions)
+- [Usage Example](#usage-example-solar-and-evcc-control-display)
+- [Development](#development)
+- [License](#license)
+- [Author](#author)
+
 ## Summary
 This project provides a clean, professional-looking stand for standard 8x8 WS2812B LED matrices. The modular design features a stable base, integrated ESP32 housing, and a diffuser system for optimal light distribution. Perfect for Home Assistant displays, pixel art, notifications, or custom visualizations.
 

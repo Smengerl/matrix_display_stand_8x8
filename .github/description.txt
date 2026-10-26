@@ -1,1 +1,1 @@
-3D printable desktop stand for 8x8 WS2812B LED matrix displays with ESP32 integration
+A desk stand for 8×8 WS2812B LED matrices: dark when off, pixel art when on. 3D-printed, ESP32, under $10.

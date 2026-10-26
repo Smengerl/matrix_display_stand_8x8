@@ -1,8 +1,10 @@
 
-# 8x8 Matrix Display Stand
+# 8×8 Pixel Display Stand
 
 [![3D Printing](https://img.shields.io/badge/3D_printing-STL-green)](#)
 [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-blue)](http://creativecommons.org/licenses/by-sa/4.0/)
+
+<img src="./print/example_usage.jpg" alt="8x8 LED matrix display stand on a desk" width="480" />
 
 ## Table of Contents
 - [Summary](#summary)
@@ -23,14 +25,11 @@ This project provides a clean, professional-looking stand for standard 8x8 WS281
 
 ## Features
 
-- **🖥️ Desktop Stand** - Stable base designed for table placement with professional appearance
-- **✨ Clean Aesthetics** - Semi-transparent acrylic cover combined with diffuser system creates a sleek look with retro pixel optics
-- **💰 Budget-Friendly** - Complete build for under $10 in components
-- **🔌 Smart Integration** - ESP32-based design with WiFi connectivity for Home Assistant and IoT applications
-- **🎨 Versatile Display** - Perfect for status displays, notifications, pixel art, weather info, or custom animations
-- **🛠️ Easy Assembly** - All parts print without supports; simple assembly with common hardware
-- **🔧 Modular Design** - Separate diffuser and grid system for optimal light distribution and customization
-- **📐 Standard Compatible** - Works with standard 8x8 WS2812B LED matrices
+- **✨ Clean aesthetics** - Semi-transparent acrylic cover plus a modular diffuser and grid system create a sleek look with retro pixel optics
+- **💰 Budget-friendly** - Complete build for under $10 in components
+- **🔌 Smart integration** - ESP32-based with WiFi for Home Assistant and IoT applications
+- **🎨 Versatile display** - Status displays, notifications, pixel art, weather info or custom animations
+- **🛠️ Easy assembly** - Desktop stand that prints without supports, built with common hardware; works with standard 8x8 WS2812B LED matrices
 
 ## Example Applications
 
